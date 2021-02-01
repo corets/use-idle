@@ -1,0 +1,56 @@
+{
+  "name": "@corets/use-idle",
+  "description": "Detect when a user goes idle",
+  "version": "0.0.0",
+  "author": "Maxim Kott",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/types/index.d.ts",
+  "keywords": [
+    "corets",
+    "react",
+    "hooks",
+    "idle"
+  ],
+  "files": [
+    "/dist"
+  ],
+  "repository": "github:corets/use-idle",
+  "homepage": "https://corets.github.io/use-idle",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "test": "jest",
+    "coverage": "jest --coverage && echo '\nOpen \"coverage/lcov-report/index.html\" in your browser\n'",
+    "lint": "tsc --noEmit",
+    "format": "prettier --write .",
+    "build": "rm -rf dist && microbundle --entry src/index.ts --target web --format cjs,es --jsx React.createElement",
+    "prodrelease": "np --no-release-draft --tag next",
+    "devrelease": "np prerelease --no-release-draft --tag dev"
+  },
+  "peerDependencies": {
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@corets/promise-helpers": "^0.0.1-0",
+    "@types/enzyme": "^3.10.5",
+    "@types/jest": "^25.1.4",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "jest": "^25.1.0",
+    "microbundle": "^0.13.0",
+    "np": "^7.2.0",
+    "prettier": "2.2.1",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "ts-jest": "^25.2.1",
+    "typescript": "^3.8.3"
+  }
+}
