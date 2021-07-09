@@ -1,30 +1,32 @@
 import { useIdle } from "./useIdle"
 import React from "react"
-import { mount } from "enzyme"
 import { createTimeout } from "@corets/promise-helpers"
-import { act } from "react-dom/test-utils"
+import { act, render, screen } from "@testing-library/react"
 
 describe("useIdle", () => {
   it("tracks idle status", async () => {
     const listeners = {}
+
     window.addEventListener = jest.fn((event, cb) => {
       listeners[event] = cb
     })
+
     let renders = 0
 
     const Test = () => {
       renders++
       const isIdle = useIdle({ threshold: 500, interval: 100 })
 
-      return <div>{isIdle ? "idle" : "active"}</div>
+      return <h1>{isIdle ? "idle" : "active"}</h1>
     }
 
     expect(localStorage.getItem("last-activity")).toBe(null)
 
-    const wrapper = mount(<Test />)
-    const targetText = () => wrapper.find("div").text()
+    render(<Test/>)
 
-    expect(targetText()).toBe("active")
+    const target = screen.getByRole("heading")
+
+    expect(target).toHaveTextContent("active")
     expect(isNaN(Date.parse(localStorage.getItem("last-activity")!))).toBe(
       false
     )
@@ -33,17 +35,17 @@ describe("useIdle", () => {
 
     await act(() => createTimeout(100))
 
-    expect(targetText()).toBe("active")
+    expect(target).toHaveTextContent("active")
     expect(renders).toBe(1)
 
     await act(() => createTimeout(600))
 
-    expect(targetText()).toBe("idle")
+    expect(target).toHaveTextContent("idle")
     expect(renders).toBe(2)
 
     await act(() => createTimeout(550))
 
-    expect(targetText()).toBe("idle")
+    expect(target).toHaveTextContent("idle")
     expect(renders).toBe(2)
 
     const listenerKeys = Object.keys(listeners)
@@ -61,44 +63,44 @@ describe("useIdle", () => {
       listeners["mousemove"]()
     })
 
-    expect(targetText()).toBe("active")
+    expect(target).toHaveTextContent("active")
     expect(renders).toBe(3)
 
     await act(() => createTimeout(100))
 
-    expect(targetText()).toBe("active")
+    expect(target).toHaveTextContent("active")
     expect(renders).toBe(3)
 
     await act(() => createTimeout(380))
 
-    expect(targetText()).toBe("active")
+    expect(target).toHaveTextContent("active")
     expect(renders).toBe(3)
 
     localStorage.setItem("last-activity", "foo")
 
     await act(() => createTimeout(480))
 
-    expect(targetText()).toBe("active")
+    expect(target).toHaveTextContent("active")
     expect(renders).toBe(3)
 
     await act(() => createTimeout(150))
 
-    expect(targetText()).toBe("idle")
+    expect(target).toHaveTextContent("idle")
     expect(renders).toBe(4)
 
     await act(() => createTimeout(200))
 
-    expect(targetText()).toBe("idle")
+    expect(target).toHaveTextContent("idle")
     expect(renders).toBe(4)
-
-    wrapper.unmount()
   })
 
   it("takes custom events and a custom local storage key", async () => {
     const listeners = {}
+
     window.addEventListener = jest.fn((event, cb) => {
       listeners[event] = cb
     })
+
     let renders = 0
 
     const Test = () => {
@@ -110,16 +112,17 @@ describe("useIdle", () => {
         storageKey: "foo",
       })
 
-      return <div>{isIdle ? "idle" : "active"}</div>
+      return <h1>{isIdle ? "idle" : "active"}</h1>
     }
 
     expect(localStorage.getItem("foo")).toBe(null)
 
-    const wrapper = mount(<Test />)
-    const targetText = () => wrapper.find("div").text()
+     render(<Test />)
+
+    const target = screen.getByRole("heading")
 
     expect(isNaN(Date.parse(localStorage.getItem("foo")!))).toBe(false)
-    expect(targetText()).toBe("active")
+    expect(target).toHaveTextContent("active")
     expect(renders).toBe(1)
 
     const listenerKeys = Object.keys(listeners)
@@ -128,14 +131,14 @@ describe("useIdle", () => {
 
     await act(() => createTimeout(600))
 
-    expect(targetText()).toBe("idle")
+    expect(target).toHaveTextContent("idle")
     expect(renders).toBe(2)
 
     act(() => {
       listeners["click"]()
     })
 
-    expect(targetText()).toBe("active")
+    expect(target).toHaveTextContent("active")
     expect(renders).toBe(3)
   })
 })
