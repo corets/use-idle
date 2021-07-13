@@ -4,9 +4,13 @@
   "version": "0.1.0",
   "author": "Maxim Kott",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "require": "./dist/index.js",
+    "import": "./dist/esm/index.js"
+  },
   "keywords": [
     "corets",
     "react",
@@ -27,7 +31,7 @@
     "coverage": "jest --coverage && echo '\nOpen \"coverage/lcov-report/index.html\" in your browser\n'",
     "lint": "tsc --noEmit",
     "format": "prettier --write .",
-    "build": "rm -rf dist && tsc --noEmit && tsup src/index.ts --clean --dts --sourcemap --format esm,cjs --legacy-output",
+    "build": "tsc --noEmit && tsup src/index.ts --clean --dts --sourcemap --format esm,cjs --legacy-output",
     "release": "np --no-release-draft",
     "preview": "np --no-release-draft --tag dev",
     "version": "yarn run build"
