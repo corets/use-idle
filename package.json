@@ -21,7 +21,7 @@
     "/dist"
   ],
   "repository": "github:corets/use-idle",
-  "homepage": "https://corets.github.io/use-idle",
+  "homepage": "https://docs.corets.io/hooks/use-idle",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
